@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Firebase Chat</title>
+    <script src='https://cdn.firebase.com/js/client/2.2.7/firebase.js'></script>
+<style>
+        .msg {
+            margin: 10px 0;
+            padding: 10px;
+            width: 400px;
+            background-color: #efefef;
+        }
+        .me {
+            background-color: #cdcdcd;
+            text-align: right;
+        }
+    </style>
+
+</head>
+<body>
+    <input id="username" type="text" placeholder="Name"><br />
+    <input id="text" type="text" placeholder="Message"><br />
+    <button id="post">Post</button><br />
+    <div id="results">
+        
+    </div>
+
+<script>
+var myFirebase = new Firebase('https://webchat-ny.firebaseio.com/');
+var usernameInput = document.querySelector('#username');
+var textInput = document.querySelector('#text');
+var postButton = document.querySelector('#post');
+
+postButton.addEventListener("click", function() {
+    var username = usernameInput.value;
+    var text = textInput.value;
+    myFirebase.push({username:username, text:text});
+    textInput.value = "";
+});
+
+ myFirebase.on('child_added', function(snapshot) {
+    var msg = snapshot.val();
+    var html = '<div class="msg"><div class="name">' +
+               '<b>' + msg.username + '</b>' +
+               '<p>' + msg.text + '</p>' +
+               '</div>';
+    document.querySelector("#results").innerHTML += html;
+  });
+
+
+
+</script>
+
+</body>
+</html>
+
